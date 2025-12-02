@@ -109,6 +109,16 @@ const htmlContent = (data: DesignData) => `
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://unpkg.com/konva@10/konva.min.js"></script>
+
+<style>
+html, body, #konva-container {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+</style>
 </head>
 
 <body style="margin:0;padding:0;overflow:hidden;">
@@ -151,13 +161,20 @@ const htmlContent = (data: DesignData) => `
 
   const container = document.getElementById("konva-container");
   const displayedWidth = container.offsetWidth;
-  const scale = displayedWidth / originalWidth;
+  const displayedHeight = container.offsetHeight;
+  console.log('[DISPLAYED] Width:', displayedWidth, 'Height:', displayedHeight);
+  const scaleX = displayedWidth / originalWidth;
+  const scaleY = displayedHeight / originalHeight;
+  console.log('[SCALE] X:', scaleX, 'Y:', scaleY);
+  const scale = Math.min(scaleX, scaleY);
 
   const stage = Konva.Node.create(stageJSON, "konva-container");
 
   stage.scale({ x: scale, y: scale });
-  stage.width(originalWidth * scale);
-  stage.height(originalHeight * scale);
+  stage.x((displayedWidth - originalWidth * scale)/2);
+  stage.y((displayedHeight - originalHeight * scale)/2);
+  stage.width(displayedWidth);
+  stage.height(displayedHeight);
   stage.draw();
 
   jsonData.items.forEach((item) => {
