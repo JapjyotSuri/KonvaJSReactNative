@@ -145,7 +145,7 @@ const brochureData = {
       text: "Italy Diaries",
       fontSize: 58,
       fill: "#e6aa41",
-      fontFamily: "Poppins",
+      fontFamily: "Georgia",
       fontWeight: "bold",
       fontStyle: "normal",
       textDecoration: "none",
@@ -357,30 +357,6 @@ html, body, #konva-container {
 
   <script>
 
-  function loadGoogleFonts() {
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href =
-    "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&family=Pacifico&family=Dancing+Script&family=Lobster&family=Oswald:wght@400;700&family=Raleway:wght@300;400;700&family=Open+Sans:wght@300;400;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;700&display=swap";
-
-  if (!document.querySelector(\`link[href="\${link.href}"]\`)) {
-    document.head.appendChild(link);
-  }
-
-  return new Promise((resolve) => {
-    if (document.fonts) {
-      document.fonts.ready.then(() => {
-        console.log("✅ Fonts fully loaded");
-        resolve();
-      });
-    } else {
-      resolve();
-    }
-  });
-}
-
-(async function () {
-  await loadGoogleFonts();
 (function() {
         const rnMsg = (type, args) => {
           window.ReactNativeWebView.postMessage(
@@ -406,9 +382,6 @@ html, body, #konva-container {
             originalError(...args);
         };
     })();
-
-
-  
 
   const jsonData = ${JSON.stringify(data)};
   const stageJSON = JSON.parse(jsonData.stage);
@@ -492,36 +465,13 @@ html, body, #konva-container {
    const node = stage.findOne("#" + item.id);
     if (!node) return;
     //making items not draggable
-    const layer = node.getLayer();
     node.draggable(false); 
     // TEXT and SHAPES are already rendered via JSON
-    if ([ "rect", "circle", "line", "path"].includes(item.type)) {
+    if (["text", "rect", "circle", "line", "path"].includes(item.type)) {
       //do nothing
     }
-    if (item.type === "text") {
-    if (node) {
-      node.destroy();
-    }
-      const textNode = new Konva.Text({
-        text: item.text,
-        fontSize: item.fontSize,
-        fontFamily: item.fontFamily,
-        fontStyle: item.fontStyle,
-        textDecoration: item.textDecoration,
-        fontWeight: item.fontWeight,
-        fill: item.fill,
-        rotation: item.rotation ?? 0,
-        x: item.x,
-        y: item.y,
-        draggable: false,
-        scaleX: item.scaleX ?? 1,
-        scaleY: item.scaleY ?? 1,
-      });
-      layer.add(textNode);
-      textNode.zIndex(node.zIndex());
-      stage.batchDraw();
-    }
-    
+
+    const layer = node.getLayer();
     // IMAGE HANDLING
     if (item.type === "image") {
     const imgLayer = new Konva.Layer();
@@ -641,13 +591,11 @@ if (item.type === "link" || item.type === "button") {
 
   // applyAnimationsToNode(node, item);
  });
- }())
 </script>
 </body>
 </html>
-
 `;
-export default function TabOneScreen() {
+export default function BrochureRendered({ data }: { data: DesignData }) {
   return (
     <View style={styles.container}>
       <View style={styles.webviewContainer}>
@@ -677,6 +625,7 @@ export default function TabOneScreen() {
           setSupportMultipleWindows={false}
         />
       </View>
+      
     </View>
   );
 }
